@@ -4,6 +4,8 @@ const cors = require("cors");
 app.use(express.json());
 app.use(express.urlencoded());
 require("dotenv").config();
+const db = require("./database/connect");
+const { User } = require("./database/models");
 
 const PORT = 3001;
 app.use(
@@ -12,10 +14,13 @@ app.use(
   })
 );
 
-app.get("/register", (req, res) => {
-  res.send("here you go");
+app.post("/register", (req, res) => {
+  const { username, password } = req.body;
+  User.create({ username, password, avatarImgUrl: "hmm" });
+  res.end();
 });
 
 app.listen(process.env.PORT || PORT, () => {
+  db.sync({ force: true });
   console.log(`Now listening on port http://localhost:${PORT}`);
 });
